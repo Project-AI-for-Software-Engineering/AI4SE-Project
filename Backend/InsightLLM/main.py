@@ -119,11 +119,3 @@ def main(team1_id, team2_id, league):
     analysis = call_chatgpt(prompt)
     winner_id = extract_winner_id(analysis)
     return analysis, winner_id
-
-# Example usage
-team1_id = 33
-team2_id = 34
-league = 39
-analysis, winner_id = main(team1_id, team2_id, league)
-print("Analysis:\n", analysis)
-print("Winner ID:", winner_id)
