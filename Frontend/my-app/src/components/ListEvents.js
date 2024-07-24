@@ -85,7 +85,7 @@ function ListEvents() {
     const callLLM   = async (team1, team2, league) =>{
         console.log(team1,team2,league)
         const url = "http://127.0.0.1:8000/api/v1/match-analysis/"
-        const response =  await fetch(url, {
+        const response =  await fetch(url, { 
                 "method": "GET",
                 "headers": {
                     "team1_id": team1,
@@ -207,6 +207,11 @@ function ListEvents() {
 					</option>
 				</select>
 			</div>
+
+            <div className='div-prediccion'>
+            <p className='p-events'>Prediction: </p>
+            <div class="fixed-text">{pred}</div>
+            </div>
 
 			<table className="table-events">
 				<thead className="thead-events">
