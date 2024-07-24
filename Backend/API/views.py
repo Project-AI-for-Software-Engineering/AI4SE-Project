@@ -4,6 +4,37 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import MatchAnalysisSerializer
 from .utils.InsightLLM import main
+from . import models
+from datetime import datetime, timedelta
+import smtplib, ssl
+from django.http import JsonResponse
+import json
+def create_mail(request):
+    data = json.loads(request.body)
+    m = models.Mail(
+        email = data["email"],
+        time = data["time"],
+        msg = data["msg"]
+    )
+    m.save()
+    return JsonResponse({"status":200})
+def send_mails(request):
+    port = 465  # For SSL
+    password = "xilh cwup pqlf gyaq"
+    mail = "betscom72@gmail.com"
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+        server.login(mail, password)
+        mails = models.Mail.objects.all()
+        for m in mails:
+            d = datetime.fromisoformat(m.time)
+            d = d + timedelta(hours=2)
+            now = datetime.now()
+            if d >= now:
+                server.sendmail(mail, m.email,m.msg)
+                m.objects.delete()
+        return JsonResponse({"status":200})
 
 # Create your views here.
 class MatchAnalysisView(APIView):
