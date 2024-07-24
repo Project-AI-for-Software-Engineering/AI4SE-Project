@@ -1,5 +1,5 @@
 """
-ASGI config for AI4SE project.
+ASGI config for Django_App project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AI4SE.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Django_App.settings')
 
 application = get_asgi_application()
