@@ -19,6 +19,7 @@
 .th-events, .td-events {
     border: 1px solid #ddd;
     padding: 8px;
+    width: 10%;
 }
 
 .th-events {
@@ -93,4 +94,35 @@
 .div-page{
     display: block;
     padding-right: 4%;
+}
+
+.tip-events{
+    width: 15%;
+    height: 15%;
+}
+
+.div-prediccion{
+    padding-top: 2%;
+}
+
+.readonly-textarea {
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 100%; /* Ajusta al contenedor */
+    height: 150px; /* Ajusta la altura */
+    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+    resize: none; /* Evita el redimensionamiento */
+    overflow: auto; /* Muestra scroll si el texto es demasiado largo */
+    background-color: #f9f9f9;
+}
+
+.fixed-text {
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 300px; /* Ajusta el ancho del contenedor */
+    height: 150px; /* Ajusta la altura */
+    overflow: auto; /* Muestra scroll si el texto es demasiado largo */
+    background-color: #f9f9f9;
+    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+    white-space: pre-wrap; /* Mantiene el formato de espacios y saltos de línea */
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "../css/ListEvents.css"
 
+
 function ListEvents(){
     const cantEventsPag = 10;
     const sports = ["football", "basketball"]
@@ -11,6 +12,7 @@ function ListEvents(){
     const [pag, setPag] = useState(0);
     const [maxPag, setMaxPag] = useState(0);
     const [originalEvents, setOriginalEvents] = useState([])
+    const [pred, setPred] = useState("")
 
     const handleSportChange = (e) => {
         setSport(e);
@@ -76,6 +78,22 @@ function ListEvents(){
         getEvents()
     };
 
+    const callLLM   = async (team1, team2, league) =>{
+        console.log(team1,team2,league)
+        const url = "http://127.0.0.1:8000/api/v1/match-analysis/"
+        const response =  await fetch(url, {
+                "method": "GET",
+                "headers": {
+                    "team1_id": team1,
+                    "team2_id": team2,
+                    "league": league
+                }
+            })
+        const data = await response.json();
+        setPred(data.analysis)
+        console.log("pred: " + pred)
+    }
+
 
     function getCurrentDate() {
         const today = new Date();
@@ -104,7 +122,6 @@ function ListEvents(){
             for (let i = 0; i < data.response.length; i++) {
                 data.response[i].fixture.popularity = obtenerPopularidad(data.response[i].teams.home.name + data.response[i].teams.home.away );
             }
-            
             setEvents(data["response"])
             setOriginalEvents(data["response"].slice())
             setMaxPag(Math.ceil(data.response.length / cantEventsPag));
@@ -147,14 +164,21 @@ function ListEvents(){
                 <input className="input-to-events" placeholder="Date" type="date" onChange={(event) => handleDateChange(event.target.value)} value={date} ></input>
                 </div>
             </div>
-            <div className='div-page'>
-                <p className='p-events'>Order by:</p>
-                <select  onChange={(e) => order_events(e.target.value)}>
+
+            <div className='div-events'>
+            <div className='sub-div-events'>
+                    <p className='p-events'>Order by:</p>
+                    <select className="form-sport-events" onChange={(e) => order_events(e.target.value)}>
                         <option key = "Original Order" value="3">Original Order</option>
                         <option key = "Ascending" value="1">Ascending</option>
                         <option key = "Descending" value="2">Descending</option>
                 </select>
-
+            </div>
+            </div>
+            
+            <div className='div-prediccion'>
+            <p className='p-events'>Prediction: </p>
+            <div class="fixed-text">{pred}</div>
             </div>
 
             <table className='table-events'>
@@ -169,6 +193,7 @@ function ListEvents(){
                         <th className='th-events'>League</th>
                         <th className='th-events'>Popularity</th>
                         <th className='th-events'>Bet/Details</th>
+                        <th className='th-events'>Prediction</th>
                     </tr>
                 </thead>
                 <tbody className='tbody-events'>
@@ -224,6 +249,9 @@ function ListEvents(){
                             <td className='td-events'>
                                 <button  className='button-events' disabled={isDateAfterOrEqualToday(e["fixture"]["date"].split('T')[0]) }>Bet/Details</button>
                             </td>
+                            <td className='td-events'>      
+                                {<input onClick={() => callLLM(e["teams"]["home"]["id"],e["teams"]["away"]["id"], e["league"]["id"])} className='tip-events'  type="image" alt = "img" src="https://icons.veryicon.com/png/o/miscellaneous/monochromatic-linear-icon-for-the-project-of/tips-22.png"></input>}
+                            </td>
                             
                         </tr>
                     ))}
@@ -234,6 +262,8 @@ function ListEvents(){
                 <button className='button-events' onClick={subPag}>Previous Page</button>
                 <button className='button-events' onClick={addPag}>Next Page</button>
             </div>
+
+            
         </div>
     );
 
