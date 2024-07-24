@@ -1,15 +1,18 @@
-import React from "react";
-import FootballGamesModal from "./components/FootballGamesModal";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ListEvents from "./components/ListEvents";
+import "./App.css";
 
-const App = () => {
-	const eventId = "12345"; // Replace with your actual event ID
-
+function App() {
 	return (
-		<div className="App">
-			<h1>Football Games Widget</h1>
-			<FootballGamesModal eventId={eventId} />
-		</div>
+		<BrowserRouter>
+			<div>
+				<Routes>
+					<Route path="/" element={<Navigate to="/home" />} />
+					<Route path="/ListEvents" element={<ListEvents />} />
+				</Routes>
+			</div>
+		</BrowserRouter>
 	);
-};
+}
 
 export default App;

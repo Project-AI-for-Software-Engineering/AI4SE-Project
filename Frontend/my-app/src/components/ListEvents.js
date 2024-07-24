@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/ListEvents.css";
-import Modal from "./ModalDetailEvent";
+import FootballGamesModal from "./FootballGamesModal";
 
 function ListEvents() {
 	const cantEventsPag = 10;
@@ -12,8 +12,8 @@ function ListEvents() {
 	const [pag, setPag] = useState(0);
 	const [maxPag, setMaxPag] = useState(0);
 	const [originalEvents, setOriginalEvents] = useState([]);
-	const [showModal, setShowModal] = useState(false);
-	const [fixtureId, setFixtureId] = useState("");
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [selectedEventId, setSelectedEventId] = useState(null);
 
 	const handleSportChange = (e) => {
 		setSport(e);
@@ -99,14 +99,14 @@ function ListEvents() {
 				method: "GET",
 				headers: {
 					"x-rapidapi-host": "v3.football.api-sports.io",
-					"x-rapidapi-key": "f30be605903f29a8bf5195620ba8f839",
+					"x-rapidapi-key": "425867f643951dd5efdeeec76ea41fa1",
 				},
 			});
 			const data = await response.json();
 
 			for (let i = 0; i < data.response.length; i++) {
 				data.response[i].fixture.popularity = obtenerPopularidad(
-					data.response[i].teams.home.name + data.response[i].teams.away.name
+					data.response[i].teams.home.name + data.response[i].teams.home.away
 				);
 			}
 
@@ -120,14 +120,19 @@ function ListEvents() {
 		}
 	};
 
-	const handleBetDetailsClick = (id) => {
-		setFixtureId(id);
-		setShowModal(true);
-	};
-
 	useEffect(() => {
 		getEvents();
 	}, []);
+
+	const openModal = (eventId) => {
+		setSelectedEventId(eventId);
+		setModalIsOpen(true);
+	};
+
+	const closeModal = () => {
+		setModalIsOpen(false);
+		setSelectedEventId(null);
+	};
 
 	return (
 		<div>
@@ -150,7 +155,7 @@ function ListEvents() {
 						value={sport}
 						onChange={(e) => handleSportChange(e.target.value)}
 					>
-						<option value="" disabled></option>
+						<option value="" disabled selected></option>
 						{sports.map((s) => (
 							<option key={s.toUpperCase()} value={s}>
 								{s.toUpperCase()}
@@ -290,7 +295,7 @@ function ListEvents() {
 										disabled={isDateAfterOrEqualToday(
 											e["fixture"]["date"].split("T")[0]
 										)}
-										onClick={() => handleBetDetailsClick(e["fixture"]["id"])}
+										onClick={() => openModal(e.fixture.id)}
 									>
 										Bet/Details
 									</button>
@@ -310,10 +315,10 @@ function ListEvents() {
 					Next Page
 				</button>
 			</div>
-			<Modal
-				show={showModal}
-				onClose={() => setShowModal(false)}
-				fixtureId={fixtureId}
+			<FootballGamesModal
+				isOpen={modalIsOpen}
+				closeModal={closeModal}
+				eventId={selectedEventId}
 			/>
 		</div>
 	);

@@ -1,39 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import Modal from "react-modal";
 import "../css/FootballGamesModal.css"; // Create this CSS file for modal styling
 
-const FootballGamesModal = ({ eventId }) => {
-	const [modalIsOpen, setModalIsOpen] = useState(false);
+Modal.setAppElement("#root"); // This line is necessary for accessibility reasons
 
-	const openModal = () => {
-		setModalIsOpen(true);
-	};
-
-	const closeModal = () => {
-		setModalIsOpen(false);
-	};
-
+const FootballGamesModal = ({ isOpen, closeModal, eventId }) => {
 	return (
-		<div>
-			<button onClick={openModal}>Bet/Details</button>
-			<Modal
-				isOpen={modalIsOpen}
-				onRequestClose={closeModal}
-				contentLabel="Football Games Modal"
-				className="modal"
-				overlayClassName="overlay"
-			>
-				<button onClick={closeModal} className="close-button">
-					&times;
-				</button>
-				<iframe
-					src={`widget.html?eventId=33`}
-					width="100%"
-					height="500px"
-					title="Football Games Widget"
-				></iframe>
-			</Modal>
-		</div>
+		<Modal
+			isOpen={isOpen}
+			onRequestClose={closeModal}
+			contentLabel="Football Games Modal"
+			className="modal"
+			overlayClassName="overlay"
+		>
+			<button onClick={closeModal} className="close-button">
+				&times;
+			</button>
+			<iframe
+				src={`widget.html?eventId=${eventId}`}
+				width="100%"
+				height="500px"
+				title="Football Games Widget"
+			></iframe>
+		</Modal>
 	);
 };
 
