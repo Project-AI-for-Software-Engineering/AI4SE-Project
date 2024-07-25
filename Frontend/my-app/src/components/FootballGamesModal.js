@@ -21,9 +21,12 @@ const FootballGamesModal = ({ isOpen, closeModal, eventId }) => {
 			});
 			const data = await response.json();
 			console.log(data)
-			setHomeOdds(2 - (parseFloat(data.response[0].predictions.percent.home.replace("%", "")) / 100) + parseFloat(Math.random().toFixed(2)))
-			setAwayOdds(2 - (parseFloat(data.response[0].predictions.percent.away.replace("%", "")) / 100) + parseFloat(Math.random().toFixed(2)))
-			setDrawOdds(2 - (parseFloat(data.response[0].predictions.percent.draw.replace("%", "")) / 100) + parseFloat(Math.random().toFixed(2)))
+			if (data.response.length > 0){
+				setHomeOdds(2 - (parseFloat(data.response[0].predictions.percent.home.replace("%", "")) / 100) + parseFloat(Math.random().toFixed(2)))
+				setAwayOdds(2 - (parseFloat(data.response[0].predictions.percent.away.replace("%", "")) / 100) + parseFloat(Math.random().toFixed(2)))
+				setDrawOdds(2 - (parseFloat(data.response[0].predictions.percent.draw.replace("%", "")) / 100) + parseFloat(Math.random().toFixed(2)))
+			}
+
 	}
 	useEffect(() => {
 		if (isOpen) {
