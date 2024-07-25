@@ -7,6 +7,11 @@ const Wallet = () => {
   const [receiverId, setReceiverId] = useState('');
 
   const handleRecharge = async () => {
+    if (!senderId) {
+      console.error('El ID del usuario no puede estar vacío');
+      return;
+    }
+  
     try {
       const response = await api.post(`/wallets/${senderId}/recharge/`, { amount });
       console.log(response.data);
@@ -14,6 +19,7 @@ const Wallet = () => {
       console.error('Error recargando la billetera:', error);
     }
   };
+  
 
   const handleTransfer = async () => {
     try {
@@ -45,7 +51,7 @@ const Wallet = () => {
       />
       <button onClick={handleRecharge}>Recargar</button>
 
-      <h2>Transferir Dinero</h2>
+      <h2>Hacer Apuesta</h2>
       <input
         type="text"
         placeholder="ID del remitente"
