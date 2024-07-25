@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'API',
     'corsheaders',
-    "Django_App"
+    'wallets'
 ]
 
 MIDDLEWARE = [
