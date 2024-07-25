@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "../css/ListEvents.css";
 import FootballGamesModal from "./FootballGamesModal";
 
-
 function ListEvents() {
 	const cantEventsPag = 10;
 	const sports = ["football", "basketball"];
@@ -15,7 +14,7 @@ function ListEvents() {
 	const [originalEvents, setOriginalEvents] = useState([]);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [selectedEventId, setSelectedEventId] = useState(null);
-    const [pred, setPred] = useState("")
+	const [pred, setPred] = useState("");
 
 	const handleSportChange = (e) => {
 		setSport(e);
@@ -82,22 +81,31 @@ function ListEvents() {
 		setDate(e);
 		getEvents();
 	};
-    const callLLM   = async (team1, team2, league) =>{
-        console.log(team1,team2,league)
-        const url = "http://127.0.0.1:8000/api/v1/match-analysis/"
-        const response =  await fetch(url, { 
-                "method": "GET",
-                "headers": {
-                    "team1_id": team1,
-                    "team2_id": team2,
-                    "league": league
-                }
-            })
-        const data = await response.json();
-        setPred(data.analysis)
-        console.log("pred: " + pred)
-    }
 
+	const callLLM = async (team1_id, team2_id, league) => {
+		console.log(team1_id, team2_id, league);
+		const url = "http://127.0.0.1:8000/api/v1/match-analysis/";
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ team1_id, team2_id, league }),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const data = await response.json();
+			setPred(data.analysis);
+			console.log("pred: " + data.analysis);
+		} catch (error) {
+			console.error("Failed to fetch data:", error);
+			setPred("Failed to fetch prediction data.");
+		}
+	};
 
 	function getCurrentDate() {
 		const today = new Date();
@@ -117,14 +125,14 @@ function ListEvents() {
 				method: "GET",
 				headers: {
 					"x-rapidapi-host": "v3.football.api-sports.io",
-					"x-rapidapi-key": "425867f643951dd5efdeeec76ea41fa1",
+					"x-rapidapi-key": "f14603dd89062225cd14d52269234f84",
 				},
 			});
 			const data = await response.json();
 
 			for (let i = 0; i < data.response.length; i++) {
 				data.response[i].fixture.popularity = obtenerPopularidad(
-					data.response[i].teams.home.name + data.response[i].teams.home.away
+					data.response[i].teams.home.name + data.response[i].teams.away.name
 				);
 			}
 
@@ -173,9 +181,9 @@ function ListEvents() {
 						value={sport}
 						onChange={(e) => handleSportChange(e.target.value)}
 					>
-						<option value="" disabled selected></option>
+						<option value="" disabled></option>
 						{sports.map((s) => (
-							<option key={s.toUpperCase()} value={s}>
+							<option key={s} value={s}>
 								{s.toUpperCase()}
 							</option>
 						))}
@@ -208,10 +216,10 @@ function ListEvents() {
 				</select>
 			</div>
 
-            <div className='div-prediccion'>
-            <p className='p-events'>Prediction: </p>
-            <div class="fixed-text">{pred}</div>
-            </div>
+			<div className="div-prediccion">
+				<p className="p-events">Prediction: </p>
+				<div className="fixed-text">{pred}</div>
+			</div>
 
 			<table className="table-events">
 				<thead className="thead-events">
@@ -225,7 +233,7 @@ function ListEvents() {
 						<th className="th-events">League</th>
 						<th className="th-events">Popularity</th>
 						<th className="th-events">Bet/Details</th>
-                        <th className='th-events'>Prediction</th>
+						<th className="th-events">Prediction</th>
 					</tr>
 				</thead>
 				<tbody className="tbody-events">
@@ -238,66 +246,42 @@ function ListEvents() {
 								</td>
 								<td className="td-events">{e["fixture"]["status"]["short"]}</td>
 								<td className="td-events">
-									<table className="sub-table-events">
-										<tbody className="sub-tbody-events">
-											<tr>
-												<img
-													loading="lazy"
-													src={e["teams"]["home"]["logo"]}
-													className="img-events"
-													alt="logo"
-												></img>
-											</tr>
-											<tr>
-												<img
-													loading="lazy"
-													src={e["teams"]["away"]["logo"]}
-													className="img-events"
-													alt="logo"
-												></img>
-											</tr>
-										</tbody>
-									</table>
+									<img
+										loading="lazy"
+										src={e["teams"]["home"]["logo"]}
+										className="img-events"
+										alt="logo"
+									></img>
+									<img
+										loading="lazy"
+										src={e["teams"]["away"]["logo"]}
+										className="img-events"
+										alt="logo"
+									></img>
 								</td>
 								<td className="td-events">
-									<table className="sub-table-events">
-										<tbody className="sub-tbody-events">
-											<tr>
-												<p
-													style={{
-														fontWeight: e["teams"]["home"]["winner"]
-															? "bold"
-															: "normal",
-													}}
-												>
-													{e["teams"]["home"]["name"]}
-												</p>
-											</tr>
-											<tr>
-												<p
-													style={{
-														fontWeight: e["teams"]["away"]["winner"]
-															? "bold"
-															: "normal",
-													}}
-												>
-													{e["teams"]["away"]["name"]}
-												</p>
-											</tr>
-										</tbody>
-									</table>
+									<p
+										style={{
+											fontWeight: e["teams"]["home"]["winner"]
+												? "bold"
+												: "normal",
+										}}
+									>
+										{e["teams"]["home"]["name"]}
+									</p>
+									<p
+										style={{
+											fontWeight: e["teams"]["away"]["winner"]
+												? "bold"
+												: "normal",
+										}}
+									>
+										{e["teams"]["away"]["name"]}
+									</p>
 								</td>
 								<td className="td-events">
-									<table className="sub-table-events">
-										<tbody className="sub-tbody-events">
-											<tr>
-												<p className="sub-p-events">{e["goals"]["home"]}</p>
-											</tr>
-											<tr>
-												<p className="sub-p-events">{e["goals"]["away"]}</p>
-											</tr>
-										</tbody>
-									</table>
+									<p className="sub-p-events">{e["goals"]["home"]}</p>
+									<p className="sub-p-events">{e["goals"]["away"]}</p>
 								</td>
 								<td className="td-events">
 									<img
@@ -324,9 +308,21 @@ function ListEvents() {
 										Bet/Details
 									</button>
 								</td>
-                            <td className='td-events'>      
-                                {<input onClick={() => callLLM(e["teams"]["home"]["id"],e["teams"]["away"]["id"], e["league"]["id"])} className='tip-events'  type="image" alt = "img" src="https://icons.veryicon.com/png/o/miscellaneous/monochromatic-linear-icon-for-the-project-of/tips-22.png"></input>}
-                            </td>
+								<td className="td-events">
+									<input
+										onClick={() =>
+											callLLM(
+												e["teams"]["home"]["id"],
+												e["teams"]["away"]["id"],
+												e["league"]["id"]
+											)
+										}
+										className="tip-events"
+										type="image"
+										alt="img"
+										src="https://icons.veryicon.com/png/o/miscellaneous/monochromatic-linear-icon-for-the-project-of/tips-22.png"
+									></input>
+								</td>
 							</tr>
 						))}
 				</tbody>
@@ -347,8 +343,6 @@ function ListEvents() {
 				closeModal={closeModal}
 				eventId={selectedEventId}
 			/>
-
-            
 		</div>
 	);
 }
