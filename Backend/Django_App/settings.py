@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(9n6&)tx4r*k=#&x#t7q*sv90y)yu=z7n2!b_zsn4-towo=d@h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'API',
+    "Django_App"
 ]
 
 MIDDLEWARE = [
@@ -78,8 +79,8 @@ WSGI_APPLICATION = 'Django_App.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'AISE_db',
-        'USER': 'admin',
+        'NAME': 'AISE',
+        'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',
         'PORT': '5432'
