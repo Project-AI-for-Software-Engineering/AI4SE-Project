@@ -15,9 +15,6 @@ const UpdateProfile = () => {
     setMessage(''); // Limpiar mensajes previos
 
     try {
-      // Log el token manual y el ID del usuario para depuración
-      console.log('Token:', manualToken);
-      console.log('User ID:', user.sub);
 
       // Configurar la solicitud PATCH
       const response = await fetch(`https://dev-3pjtuh5txz1sg5lc.us.auth0.com/api/v2/users/${user.sub}`, {
