@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import HttpResponse
 from .serializers import MatchAnalysisSerializer
 from .utils.InsightLLM import main
 from . import models
@@ -10,15 +11,19 @@ import smtplib, ssl
 from django.http import JsonResponse
 import json
 def create_mail(request):
-    data = json.loads(request.body)
-    m = models.Mail(
-        email = data["email"],
-        time = data["time"],
-        msg = data["msg"]
-    )
-    m.save()
-    print(models.Mail.objects.all())
-    return JsonResponse({"status":200})
+    try:
+        data = json.loads(request.body)
+        m = models.Mail(
+            email = data["email"],
+            time = data["time"],
+            msg = data["msg"]
+        )
+        m.save()
+        return JsonResponse({"status":200})
+    except:
+        x =  HttpResponse()
+        x.status_code = 201
+        return x
 def send_mails(request):
     port = 465  # For SSL
     password = "xilh cwup pqlf gyaq"

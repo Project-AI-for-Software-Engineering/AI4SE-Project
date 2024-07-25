@@ -1,8 +1,9 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
+from datetime import datetime, timedelta
 from rest_framework import status
 from django.urls import reverse
-
+from . import models
 # python manage.py test API
 
 class MatchAnalysisTestCase(TestCase):
@@ -66,3 +67,103 @@ class MatchAnalysisTestCase(TestCase):
         response = self.client.post(self.url, data=self.incomplete_payload, format='json')
         # Verifica que el estado de la respuesta sea 400 Bad Request
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class MailTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.create_mail_url = reverse('create-mail')
+        self.send_mails_url = reverse('send-mails')
+
+    def test_create_mail(self):
+        data = {
+            "email": "test@example.com",
+            "time": datetime.now().isoformat(),
+            "msg": "Test message"
+        }
+        response = self.client.post(
+            self.create_mail_url,
+            data=data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.Mail.objects.count(), 1)
+        mail = models.Mail.objects.first()
+        self.assertEqual(mail.email, data['email'])
+        self.assertEqual(mail.msg, data['msg'])
+
+    def test_create_mail_with_invalid_data(self):
+        data = {
+            "email": "test@example.com",
+            "time": datetime.now().isoformat()
+            # "msg" is missing
+        }
+        response = self.client.post(
+            self.create_mail_url,
+            data=data,
+            format='json'
+        )
+        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(models.Mail.objects.count(), 0)
+
+    def test_send_mails(self):
+        mail = models.Mail(
+            email='test@example.com',
+            time=(datetime.now() - timedelta(hours=3)).isoformat(),
+            msg='Test message'
+        )
+        mail.save()
+
+        response = self.client.post(self.send_mails_url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.Mail.objects.count(), 0)
+
+    def test_send_mails_when_no_mails_exist(self):
+        response = self.client.post(self.send_mails_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.Mail.objects.count(), 0)
+
+    def test_send_mail_with_future_time(self):
+        mail = models.Mail(
+            email='test@example.com',
+            time=(datetime.now() + timedelta(hours=3)).isoformat(),
+            msg='Test message'
+        )
+        mail.save()
+
+        response = self.client.post(self.send_mails_url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.Mail.objects.count(), 1)
+        mail.refresh_from_db()
+        self.assertEqual(mail.email, 'test@example.com')
+        self.assertEqual(mail.msg, 'Test message')
+
+    def test_create_multiple_mails(self):
+        data1 = {
+            "email": "test1@example.com",
+            "time": datetime.now().isoformat(),
+            "msg": "Test message 1"
+        }
+        data2 = {
+            "email": "test2@example.com",
+            "time": (datetime.now() + timedelta(hours=1)).isoformat(),
+            "msg": "Test message 2"
+        }
+        response1 = self.client.post(
+            self.create_mail_url,
+            data=data1,
+            format='json'
+        )
+        response2 = self.client.post(
+            self.create_mail_url,
+            data=data2,
+            format='json'
+        )
+        self.assertEqual(response1.status_code, 200)
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(models.Mail.objects.count(), 2)
+        mail1 = models.Mail.objects.get(email=data1['email'])
+        mail2 = models.Mail.objects.get(email=data2['email'])
+        self.assertEqual(mail1.msg, data1['msg'])
+        self.assertEqual(mail2.msg, data2['msg'])

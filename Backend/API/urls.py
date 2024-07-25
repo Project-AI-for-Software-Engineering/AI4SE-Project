@@ -7,6 +7,6 @@ routers = routers.DefaultRouter()
 urlpatterns = [
     # Define la ruta para el análisis de partidos
     path('match-analysis/', MatchAnalysisView.as_view(), name='match-analysis'),
-    path('send-mails/', views.send_mails),
-    path('create-mail/', views.create_mail)
+    path('send-mails/', views.send_mails, name = "send-mails"),
+    path('create-mail/', views.create_mail, name = "create-mail")
 ]
