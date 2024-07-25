@@ -1,0 +1,72 @@
+.home-container {
+  text-align: center;
+  padding: 30px 20px 20px; /* Aumenta el padding superior */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #000000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alinea el contenido al principio del contenedor */
+  align-items: center;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 30px; /* Aumenta el margen inferior del título */
+}
+
+.main-content {
+  display: flex;
+  gap: 30px; /* Espacio entre las columnas */
+  justify-content: center; /* Centra las columnas horizontalmente */
+  flex-wrap: wrap; /* Asegura que las columnas se ajusten en pantallas más pequeñas */
+}
+
+.buttons-column {
+  display: flex;
+  flex-direction: column; /* Apila los botones verticalmente */
+  gap: 20px; /* Espacio entre los botones */
+  align-items: center; /* Centra los botones horizontalmente */
+}
+
+.logout-button, .login-button, .additional-button {
+  padding: 15px 30px; /* Tamaño del botón */
+  font-size: 1.25rem; /* Tamaño del texto */
+  border: none;
+  border-radius: 8px; /* Bordes redondeados */
+  cursor: pointer;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra del botón */
+  transition: background-color 0.3s, transform 0.3s; /* Transiciones suaves */
+}
+
+.login-button {
+  background-color: #04255e; /* Color del botón de login */
+}
+
+.logout-button {
+  background-color: #dc3545; /* Color del botón de logout */
+}
+
+.additional-button {
+  background-color: #04255e; /* Color de los nuevos botones */
+}
+
+.logout-button:hover, .login-button:hover, .additional-button:hover {
+  background-color: #000000; /* Color de fondo al pasar el ratón */
+  transform: scale(1.05); /* Efecto de zoom al pasar el ratón */
+}
+
+.profile-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-column h2 {
+  margin-bottom: 10px;
+}
