@@ -1,20 +1,20 @@
-// App.js
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
-import ListEvents from './components/ListEvents';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./components/Home" ; 
+import ListEvents from "./components/ListEvents";
+import "./App.css";
 
-const App = () => {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/ListEvents" element={<ListEvents />} />
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/ListEvents" element={<ListEvents />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
-
 
