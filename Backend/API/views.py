@@ -17,6 +17,7 @@ def create_mail(request):
         msg = data["msg"]
     )
     m.save()
+    print(models.Mail.objects.all())
     return JsonResponse({"status":200})
 def send_mails(request):
     port = 465  # For SSL
@@ -30,10 +31,11 @@ def send_mails(request):
         for m in mails:
             d = datetime.fromisoformat(m.time)
             d = d + timedelta(hours=2)
+            d = d.replace(tzinfo=None)
             now = datetime.now()
-            if d >= now:
+            if d < now:
                 server.sendmail(mail, m.email,m.msg)
-                m.objects.delete()
+                m.delete()
         return JsonResponse({"status":200})
 
 # Create your views here.
