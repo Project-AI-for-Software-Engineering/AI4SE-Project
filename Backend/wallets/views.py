@@ -1,31 +1,47 @@
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from .models import Wallet, Transaction
+from .serializers import WalletSerializer, TransactionSerializer
+from django.contrib.auth.models import User
 
-@api_view(['POST'])
-def send_money(request):
-    from_wallet_id = request.data.get('from_wallet')
-    to_wallet_id = request.data.get('to_wallet')
-    amount = float(request.data.get('amount', 0))
+class WalletViewSet(viewsets.ModelViewSet):
+    queryset = Wallet.objects.all()
+    serializer_class = WalletSerializer
 
-    try:
-        from_wallet = Wallet.objects.get(id=from_wallet_id, user=request.user)
-        to_wallet = Wallet.objects.get(id=to_wallet_id)
+    @action(detail=True, methods=['post'])
+    def recharge(self, request, pk=None):
+        wallet = self.get_object()
+        amount = request.data.get('amount', 0)
+        wallet.balance += float(amount)
+        wallet.save()
+        return Response({'status': 'balance updated'})
 
-        if from_wallet.balance >= amount:
-            from_wallet.balance -= amount
-            from_wallet.save()
+    @action(detail=False, methods=['post'])
+    def transfer(self, request):
+        sender_id = request.data.get('sender')
+        receiver_id = request.data.get('receiver')
+        amount = request.data.get('amount', 0)
 
-            to_wallet.balance += amount
-            to_wallet.save()
+        sender_wallet = Wallet.objects.get(id=sender_id)
+        receiver_wallet = Wallet.objects.get(id=receiver_id)
 
-            Transaction.objects.create(wallet=from_wallet, amount=-amount, transaction_type='debit')
-            Transaction.objects.create(wallet=to_wallet, amount=amount, transaction_type='credit')
+        if sender_wallet.balance >= float(amount):
+            sender_wallet.balance -= float(amount)
+            receiver_wallet.balance += float(amount)
+            sender_wallet.save()
+            receiver_wallet.save()
 
-            return Response({'message': 'Money sent successfully!'}, status=status.HTTP_200_OK)
+            Transaction.objects.create(
+                sender=sender_wallet,
+                receiver=receiver_wallet,
+                amount=float(amount)
+            )
+
+            return Response({'status': 'transfer completed'})
         else:
-            return Response({'error': 'Insufficient funds.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'insufficient funds'}, status=400)
 
-    except Wallet.DoesNotExist:
-        return Response({'error': 'Wallet not found.'}, status=status.HTTP_404_NOT_FOUND)
+class TransactionViewSet(viewsets.ModelViewSet):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
