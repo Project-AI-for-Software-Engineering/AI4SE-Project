@@ -4,6 +4,7 @@ import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
 import Button1 from './Button1';
 import Button2 from './Button2';
+import Button3 from './Button3';
 import Profile from './Profile';
 import UpdateProfile from './UpdateProfile';
 import '../css/Home.css';
@@ -26,6 +27,7 @@ const Home = () => {
             <>
               <LogoutButton className="logout-button" />
               <Button1 className="additional-button" />
+              <Button3 className="additional-button" />
               <Button2 className="additional-button" onClick={handleButton2Click} />
             </>
           ) : (

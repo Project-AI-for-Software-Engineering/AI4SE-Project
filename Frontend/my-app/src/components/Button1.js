@@ -10,7 +10,7 @@ const Button1 = ({ className }) => {
 
   return (
     <button className={className} onClick={handleClick}>
-      Ver Partidos
+      See Matches
     </button>
   );
 };
