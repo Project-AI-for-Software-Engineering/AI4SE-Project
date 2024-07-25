@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Wallet, Transaction
 from .serializers import WalletSerializer, TransactionSerializer
-from django.contrib.auth.models import User
 
 class WalletViewSet(viewsets.ModelViewSet):
     queryset = Wallet.objects.all()
