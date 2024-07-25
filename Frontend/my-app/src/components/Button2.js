@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Button2 = ({ className }) => (
-  <button className={className} onClick={() => alert('Button 2 clicked')}>
-    See Results
+const Button2 = ({ className, onClick }) => (
+  <button className={className} onClick={onClick}>
+    Update Profile
   </button>
 );
 

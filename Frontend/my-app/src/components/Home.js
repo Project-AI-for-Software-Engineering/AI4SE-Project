@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
-import Button1 from './Button1'; // Importa el nuevo botón
-import Button2 from './Button2'; // Importa el segundo nuevo botón
+import Button1 from './Button1';
+import Button2 from './Button2';
 import Profile from './Profile';
+import UpdateProfile from './UpdateProfile';
 import '../css/Home.css';
-import backgroundImage from '../assets/images/background-image.png'; 
+import backgroundImage from '../assets/images/background-image.png';
 
 const Home = () => {
   const { isAuthenticated } = useAuth0();
+  const [showUpdateProfile, setShowUpdateProfile] = useState(false);
+
+  const handleButton2Click = () => {
+    setShowUpdateProfile(!showUpdateProfile);
+  };
 
   return (
     <div className="home-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
@@ -20,7 +26,7 @@ const Home = () => {
             <>
               <LogoutButton className="logout-button" />
               <Button1 className="additional-button" />
-              <Button2 className="additional-button" />
+              <Button2 className="additional-button" onClick={handleButton2Click} />
             </>
           ) : (
             <LoginButton className="login-button" />
@@ -30,6 +36,7 @@ const Home = () => {
           <div className="profile-column">
             <h2>Profile Info</h2>
             <Profile className="profile-button" />
+            {showUpdateProfile && <UpdateProfile />}
           </div>
         )}
       </div>
@@ -38,6 +45,4 @@ const Home = () => {
 };
 
 export default Home;
-
-
 
