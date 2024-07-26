@@ -3,11 +3,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from decimal import Decimal
 from django.http import JsonResponse
-from .models import Wallet, Transaction
+from .models import Wallet, Transaction, Bet
 from .serializers import WalletSerializer, TransactionSerializer
 from cryptography.fernet import Fernet
 
- 
 key = Fernet.generate_key()
  
 # Instance the Fernet class with the key
@@ -46,10 +45,16 @@ class WalletViewSet(viewsets.ModelViewSet):
 
         return Response({'status': 'balance updated'})
     
+    @action(detail=True, methods=['get'])
+    def balance(self, request, pk=None):
+        wallet = self.get_object()
+        return Response({'balance': wallet.balance})
+    
 
     @action(detail=True, methods=['get'])
     def history(self, request, pk=None):   
         transactions = Transaction.objects.filter()
+        bets= Bet.objects.filter()
         transactions_list = [
             {
                 'id': transaction.id,
@@ -58,7 +63,19 @@ class WalletViewSet(viewsets.ModelViewSet):
             }
             for transaction in transactions
         ]
-        return JsonResponse({'transactions': transactions_list})
+        bets_list = [
+            {
+                'eventId': bet.eventId,
+                'home': str(bet.home),
+                'away': str(bet.away), 
+                'amount': str(bet.amount), 
+                'bet': str(bet.bet),
+                'result':"TBD",  
+               
+            }
+            for bet in bets
+        ]
+        return JsonResponse({'transactions': transactions_list,'bets': bets_list })
 
 
     @action(detail=False, methods=['post'])
@@ -75,11 +92,22 @@ class WalletViewSet(viewsets.ModelViewSet):
             receiver_wallet.balance += Decimal(amount)
             sender_wallet.save()
             receiver_wallet.save()
+
+
             Transaction.objects.create(
                 sender=sender_wallet,
                 receiver=receiver_wallet,
                 amount=float(amount), 
                 _description= str(fernet.encrypt(str(amount).encode()))
+            )
+            Bet.objects.create(
+            sender =sender_wallet,
+            eventId = request.data.get('eventid'),
+            home = request.data.get('home'),
+            away=  request.data.get('away'),
+            amount = float(amount),
+            bet = request.data.get('bet'),
+            result= ""
             )
 
             return Response({'status': 'transfer completed'})

@@ -4,13 +4,6 @@ from cryptography.fernet import Fernet
 
 # Load encryption key
 
-def load_key():
-    with open('secret.key', 'rb') as key_file:
-        return key_file.read()
-
-
-key = load_key()
-fernet = Fernet(key)
 
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -24,3 +17,14 @@ class Transaction(models.Model):
     _description = models.TextField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Bet(models.Model):
+    sender = models.ForeignKey(Wallet, related_name='sent_bet', on_delete=models.CASCADE)
+    eventId = models.TextField()
+    home = models.TextField()
+    away=  models.TextField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    bet = models.TextField()
+    result= models.TextField()
+   

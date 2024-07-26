@@ -305,7 +305,7 @@ function ListEvents() {
 										disabled={isDateAfterOrEqualToday(
 											e["fixture"]["date"].split("T")[0]
 										)}
-										onClick={() => openModal(e.fixture.id, [e["teams"]["away"]["name"], e["teams"]["home"]["name"], e["fixture"]["date"].split("T")[0]])}
+										onClick={() => openModal(e.fixture.id, [e["teams"]["away"]["name"], e["teams"]["home"]["name"], e["fixture"]["date"].split("T")[0], 5])}
 									>
 										Bet/Details
 									</button>
@@ -344,8 +344,7 @@ function ListEvents() {
 				isOpen={modalIsOpen}
 				closeModal={closeModal}
 				eventId={selectedEventId}
-				match= {matchInfo}
-			
+				match={matchInfo}
 				
 
 			/>
