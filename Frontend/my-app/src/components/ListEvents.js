@@ -136,7 +136,7 @@ function ListEvents() {
 				method: "GET",
 				headers: {
 					"x-rapidapi-host": "v3.football.api-sports.io",
-					"x-rapidapi-key": "f30be605903f29a8bf5195620ba8f839",
+					"x-rapidapi-key": "0bdeba2f46704ebc6fe0ec9047150596",
 				},
 			});
 			const data = await response.json();
@@ -328,6 +328,7 @@ function ListEvents() {
 												e["teams"]["away"]["name"],
 												e["teams"]["home"]["name"],
 												e["fixture"]["date"].split("T")[0],
+												e.fixture.id
 											])
 										}
 									>

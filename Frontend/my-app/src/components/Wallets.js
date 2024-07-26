@@ -77,6 +77,8 @@ const Wallet = ({match}) => {
 
   const handleTransfer = async () => {
     try {
+      console.log("----EVENT ID ----")
+      console.log(match[3])
       const response = await api.post('/wallets/transfer/', {
         sender: '1',
         receiver: '10',

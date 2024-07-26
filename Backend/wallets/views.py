@@ -7,6 +7,10 @@ from .models import Wallet, Transaction, Bet
 from .serializers import WalletSerializer, TransactionSerializer
 from cryptography.fernet import Fernet
 import requests
+from datetime import datetime, timedelta
+import smtplib, ssl
+from django.http import JsonResponse
+import json
 key = Fernet.generate_key()
  
 # Instance the Fernet class with the key
@@ -20,6 +24,23 @@ print("type ", type(encMessage))
 print("original string: ", message)
 print("encrypted string: ", encMessage)
  
+
+ 
+def send_mails(email):
+    port = 587  # For SSL
+    password = "zldw gljw trow tdeb"
+    mail = "florezruizjosedavid@gmail.com"
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+        server.login(mail, password)
+        d = datetime.fromisoformat(m.time)
+        d = d + timedelta(hours=2)
+        d = d.replace(tzinfo=None)
+        now = datetime.now()
+        server.sendmail(mail, email,"Has ganado tu apuesta")
+        return JsonResponse({"status":200})
+
+
 # decrypt the encrypted string with the 
 # Fernet instance of the key,
 # that was used for encrypting the string
@@ -49,7 +70,7 @@ class WalletViewSet(viewsets.ModelViewSet):
     def balance(self, request, pk=None):
         wallet = self.get_object()
         return Response({'balance': wallet.balance})
-    
+   
 
     @action(detail=True, methods=['get'])
     def history(self, request, pk=None):   
@@ -115,6 +136,7 @@ class WalletViewSet(viewsets.ModelViewSet):
                     )
             if result:
                 i['result']=["You Won " + str(2*Decimal(i['amount']))]
+                #send_mails("jd.florezr1@uniandes.edu.co")
             # Check if the request was successful
             if response.status_code == 200:
                 data = response.json()
