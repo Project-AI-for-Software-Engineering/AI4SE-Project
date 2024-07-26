@@ -141,3 +141,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 CRON_CLASSES = [
     "API.cron.SendMailsCronJob",
 ]
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "zldw gljw trow tdeb"
+EMAIL_HOST_PASSWORD = "florezruizjosedavid@gmail.com"

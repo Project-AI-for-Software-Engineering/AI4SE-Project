@@ -12,6 +12,8 @@ import smtplib, ssl
 from django.http import JsonResponse
 import json
 key = Fernet.generate_key()
+from django.conf import settings
+from django.core.mail import send_mail
  
 # Instance the Fernet class with the key
  
@@ -27,18 +29,12 @@ print("encrypted string: ", encMessage)
 
  
 def send_mails(email):
-    port = 587  # For SSL
-    password = "zldw gljw trow tdeb"
-    mail = "florezruizjosedavid@gmail.com"
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-        server.login(mail, password)
-        d = datetime.fromisoformat(m.time)
-        d = d + timedelta(hours=2)
-        d = d.replace(tzinfo=None)
-        now = datetime.now()
-        server.sendmail(mail, email,"Has ganado tu apuesta")
-        return JsonResponse({"status":200})
+    
+    subject = 'Bet Result | Bet App'
+    message = f'Hi , thank you for registering in geeksforgeeks.'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = "jd.florezr1@uniandes.edu.co"
+    send_mail( subject, message, email_from, recipient_list )
 
 
 # decrypt the encrypted string with the 
@@ -136,7 +132,7 @@ class WalletViewSet(viewsets.ModelViewSet):
                     )
             if result:
                 i['result']=["You Won " + str(2*Decimal(i['amount']))]
-                #send_mails("jd.florezr1@uniandes.edu.co")
+                send_mails("jd.florezr1@uniandes.edu.co")
             # Check if the request was successful
             if response.status_code == 200:
                 data = response.json()
