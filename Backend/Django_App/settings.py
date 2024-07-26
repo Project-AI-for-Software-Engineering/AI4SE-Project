@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'API',
     'corsheaders',
-    "Django_App"
+    'wallets'
 ]
 
 MIDDLEWARE = [
@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'Django_App.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'AISE',
+        'NAME': 'aise5',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',
