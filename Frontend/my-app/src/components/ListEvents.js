@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
-import "../css/ListEvents.css";
-import FootballGamesModal from "./FootballGamesModal";
+import "../css/ListEvents.css"; // Import the CSS file for styling
+import FootballGamesModal from "./FootballGamesModal"; // Import the modal component
 
 function ListEvents() {
-	const cantEventsPag = 10;
-	const sports = ["football", "basketball"];
-	const [sport, setSport] = useState(sports[0]);
-	const [date, setDate] = useState(getCurrentDate());
-	const validSport = ["football"].includes(sport);
-	const [events, setEvents] = useState([]);
-	const [pag, setPag] = useState(0);
-	const [maxPag, setMaxPag] = useState(0);
-	const [originalEvents, setOriginalEvents] = useState([]);
-	const [modalIsOpen, setModalIsOpen] = useState(false);
-	const [selectedEventId, setSelectedEventId] = useState(null);
-	const [pred, setPred] = useState("");
-	const [matchInfo, setMatchInfo]= useState([]);
+	const cantEventsPag = 10; // Number of events per page
+	const sports = ["football", "basketball"]; // Array of sports
+	const [sport, setSport] = useState(sports[0]); // State to keep track of the selected sport
+	const [date, setDate] = useState(getCurrentDate()); // State to keep track of the selected date
+	const validSport = ["football"].includes(sport); // Boolean to check if the selected sport is valid
+	const [events, setEvents] = useState([]); // State to store the events
+	const [pag, setPag] = useState(0); // State to keep track of the current page
+	const [maxPag, setMaxPag] = useState(0); // State to keep track of the maximum number of pages
+	const [originalEvents, setOriginalEvents] = useState([]); // State to store the original list of events
+	const [modalIsOpen, setModalIsOpen] = useState(false); // State to control the modal visibility
+	const [selectedEventId, setSelectedEventId] = useState(null); // State to store the selected event ID
+	const [pred, setPred] = useState(""); // State to store the prediction
+	const [matchInfo, setMatchInfo] = useState([]); // State to store match information
 
+	// Function to handle sport change
 	const handleSportChange = (e) => {
 		setSport(e);
 		getEvents();
 	};
 
+	// Function to order events
 	const order_events = (order) => {
 		setPag(0);
 		let sortedEvents = [...events];
@@ -37,10 +39,12 @@ function ListEvents() {
 		setEvents(sortedEvents);
 	};
 
+	// Function to increment the page number
 	function addPag() {
 		setPag((pag + 1) % maxPag);
 	}
 
+	// Function to decrement the page number
 	function subPag() {
 		if (pag === 0) {
 			return;
@@ -48,6 +52,7 @@ function ListEvents() {
 		setPag((pag - 1) % maxPag);
 	}
 
+	// Function to check if a date is after or equal to today
 	function isDateAfterOrEqualToday(dateString) {
 		const today = new Date();
 		const inputDate = new Date(
@@ -62,6 +67,7 @@ function ListEvents() {
 		return inputDate.setDate(inputDate.getDate() + 1) < today;
 	}
 
+	// Function to calculate popularity
 	function obtenerPopularidad(cadena, minVal = 1, maxVal = 100) {
 		function hashString(str) {
 			let hash = 0;
@@ -78,11 +84,13 @@ function ListEvents() {
 		return minVal + (Math.abs(hash) % range);
 	}
 
+	// Function to handle date change
 	const handleDateChange = (e) => {
 		setDate(e);
 		getEvents();
 	};
 
+	// Function to call the LLM for match analysis
 	const callLLM = async (team1_id, team2_id, league) => {
 		console.log(team1_id, team2_id, league);
 		const url = "http://127.0.0.1:8000/api/v1/match-analysis/";
@@ -108,6 +116,7 @@ function ListEvents() {
 		}
 	};
 
+	// Function to get the current date in the format YYYY-MM-DD
 	function getCurrentDate() {
 		const today = new Date();
 		const year = today.getFullYear();
@@ -117,6 +126,7 @@ function ListEvents() {
 		return `${year}-${month}-${day}`;
 	}
 
+	// Function to fetch events from the API
 	const getEvents = async () => {
 		setPag(0);
 		if (validSport) {
@@ -147,16 +157,19 @@ function ListEvents() {
 		}
 	};
 
+	// useEffect hook to fetch events when the component mounts
 	useEffect(() => {
 		getEvents();
 	}, []);
 
+	// Function to open the modal
 	const openModal = (eventId, match) => {
 		setSelectedEventId(eventId);
-		setMatchInfo(match)
+		setMatchInfo(match);
 		setModalIsOpen(true);
 	};
 
+	// Function to close the modal
 	const closeModal = () => {
 		setModalIsOpen(false);
 		setSelectedEventId(null);
@@ -164,6 +177,7 @@ function ListEvents() {
 
 	return (
 		<div>
+			{/* Page navigation */}
 			<div className="div-page">
 				<p className="p-events">
 					Current Page: {pag + 1}/{maxPag}
@@ -175,6 +189,7 @@ function ListEvents() {
 					Next Page
 				</button>
 			</div>
+			{/* Event filters */}
 			<div className="div-events">
 				<div className="sub-div-events">
 					<p className="p-events">Sport:</p>
@@ -203,6 +218,7 @@ function ListEvents() {
 					></input>
 				</div>
 			</div>
+			{/* Order events */}
 			<div className="div-page">
 				<p className="p-events">Order by:</p>
 				<select onChange={(e) => order_events(e.target.value)}>
@@ -218,11 +234,13 @@ function ListEvents() {
 				</select>
 			</div>
 
+			{/* Prediction display */}
 			<div className="div-prediccion">
 				<p className="p-events">Prediction: </p>
 				<div className="fixed-text">{pred}</div>
 			</div>
 
+			{/* Events table */}
 			<table className="table-events">
 				<thead className="thead-events">
 					<tr className="tr-events">
@@ -305,7 +323,13 @@ function ListEvents() {
 										disabled={isDateAfterOrEqualToday(
 											e["fixture"]["date"].split("T")[0]
 										)}
-										onClick={() => openModal(e.fixture.id, [e["teams"]["away"]["name"], e["teams"]["home"]["name"], e["fixture"]["date"].split("T")[0]])}
+										onClick={() =>
+											openModal(e.fixture.id, [
+												e["teams"]["away"]["name"],
+												e["teams"]["home"]["name"],
+												e["fixture"]["date"].split("T")[0],
+											])
+										}
 									>
 										Bet/Details
 									</button>
@@ -329,6 +353,7 @@ function ListEvents() {
 						))}
 				</tbody>
 			</table>
+			{/* Page navigation */}
 			<div className="div-page">
 				<p className="p-events">
 					Current Page: {pag + 1}/{maxPag}
@@ -340,14 +365,12 @@ function ListEvents() {
 					Next Page
 				</button>
 			</div>
+			{/* Modal for detailed view */}
 			<FootballGamesModal
 				isOpen={modalIsOpen}
 				closeModal={closeModal}
 				eventId={selectedEventId}
-				match= {matchInfo}
-			
-				
-
+				match={matchInfo}
 			/>
 		</div>
 	);
