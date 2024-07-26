@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'Django_App.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'aise3',
+        'NAME': 'aise4',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',
