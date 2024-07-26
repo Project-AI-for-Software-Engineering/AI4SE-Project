@@ -7,7 +7,28 @@ from .models import Wallet, Transaction
 from .serializers import WalletSerializer, TransactionSerializer
 from cryptography.fernet import Fernet
 
+ 
+key = Fernet.generate_key()
+ 
+# Instance the Fernet class with the key
+ 
+message = "hello geeks"
+fernet = Fernet(key)
 
+
+encMessage = fernet.encrypt(message.encode())
+print("type ", type(encMessage)) 
+print("original string: ", message)
+print("encrypted string: ", encMessage)
+ 
+# decrypt the encrypted string with the 
+# Fernet instance of the key,
+# that was used for encrypting the string
+# encoded byte string is returned by decrypt method,
+# so decode it to string with decode methods
+decMessage = fernet.decrypt(encMessage).decode()
+ 
+print("decrypted string: ", decMessage)
 
 class WalletViewSet(viewsets.ModelViewSet):
     queryset = Wallet.objects.all()
@@ -28,12 +49,12 @@ class WalletViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def history(self, request, pk=None):   
-        
         transactions = Transaction.objects.filter()
         transactions_list = [
             {
                 'id': transaction.id,
-                'amount': str(transaction.amount)
+                'amount': str(transaction.amount), 
+                '_description': fernet.decrypt(fernet.encrypt(str(transaction.amount).encode())).decode()
             }
             for transaction in transactions
         ]
@@ -54,11 +75,11 @@ class WalletViewSet(viewsets.ModelViewSet):
             receiver_wallet.balance += Decimal(amount)
             sender_wallet.save()
             receiver_wallet.save()
-
             Transaction.objects.create(
                 sender=sender_wallet,
                 receiver=receiver_wallet,
-                amount=float(amount)
+                amount=float(amount), 
+                _description= str(fernet.encrypt(str(amount).encode()))
             )
 
             return Response({'status': 'transfer completed'})
