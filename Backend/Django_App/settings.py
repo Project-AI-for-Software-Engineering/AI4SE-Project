@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'API',
     'corsheaders',
-    'wallets'
+    'wallets',
+    'django_cron',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CRON_CLASSES = [
+    "API.cron.SendMailsCronJob",
+]

@@ -25,9 +25,9 @@ def create_mail(request):
         x.status_code = 201
         return x
 def send_mails(request):
-    port = 465  # For SSL
-    password = "xilh cwup pqlf gyaq"
-    mail = "betscom72@gmail.com"
+    port = 587  # For SSL
+    password = "zldw gljw trow tdeb"
+    mail = "florezruizjosedavid@gmail.com"
     context = ssl.create_default_context()
 
     with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
