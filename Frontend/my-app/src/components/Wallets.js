@@ -39,6 +39,8 @@ const Wallet = ({match}) => {
 
 
   const handleChange = (event) => {
+    console.log("Option")
+    console.log(event.target.value)
     setSelectedOption(event.target.value);
   };
   const handleRecharge = async () => {
@@ -48,7 +50,7 @@ const Wallet = ({match}) => {
     }
   
     try {
-      const response = await api.post(`/wallets/${senderId}/recharge/`, {"amount": amount });
+      const response = await api.post(`/wallets/${senderId}/recharge/`, {"amount": amountFund });
       console.log(response.data);
       getBalance();
     } catch (error) {
@@ -79,7 +81,10 @@ const Wallet = ({match}) => {
         sender: '1',
         receiver: '10',
         amount:amount,
-      });
+        eventid: match[3], 
+        home: match[0], 
+        away: match[1], 
+         bet: selectedOption      });
       console.log(response.data);
     } catch (error) {
       console.error('Error transfiriendo dinero:', error);
@@ -117,9 +122,8 @@ const Wallet = ({match}) => {
       <label htmlFor="myDropdown"> ¿Quién ganará el proximo encuentro el {match[2]} ?</label>
       <select id="myDropdown" value={selectedOption} onChange={handleChange}>
         <option value="">Selecciona</option>
-        <option value="option1">{match[0]}</option>
-        <option value="option2">{match[1]}</option>
-   
+        <option value={match[0]}>{match[0]}</option>
+        <option value={match[1]}>{match[1]}</option>
       </select>
       
       {/* Display the selected value */}
