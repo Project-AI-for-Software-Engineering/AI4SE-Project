@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "../css/FootballGamesModal.css"; // Create this CSS file for modal styling
+import Wallets from "./Wallets.js";
 
 Modal.setAppElement("#root"); // This line is necessary for accessibility reasons
 
-const FootballGamesModal = ({ isOpen, closeModal, eventId }) => {
+const FootballGamesModal = ({ isOpen, closeModal, eventId, match }) => {
 	const [homeOdds, setHomeOdds] = useState(0.0)
 	const [awayOdds, setAwayOdds] = useState(0.0)
 	const [drawOdds, setDrawOdds] = useState(0.0)
@@ -53,6 +54,7 @@ const FootballGamesModal = ({ isOpen, closeModal, eventId }) => {
 			<p>Home Odds: {homeOdds}</p>
 			<p>Away Odds: {awayOdds}</p>
 			<p>Draw Odds: {drawOdds}</p>
+			<Wallets match={match} />
 		</Modal>
 	);
 };

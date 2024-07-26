@@ -15,6 +15,7 @@ function ListEvents() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [selectedEventId, setSelectedEventId] = useState(null);
 	const [pred, setPred] = useState("");
+	const [matchInfo, setMatchInfo]= useState([]);
 
 	const handleSportChange = (e) => {
 		setSport(e);
@@ -150,8 +151,9 @@ function ListEvents() {
 		getEvents();
 	}, []);
 
-	const openModal = (eventId) => {
+	const openModal = (eventId, match) => {
 		setSelectedEventId(eventId);
+		setMatchInfo(match)
 		setModalIsOpen(true);
 	};
 
@@ -303,7 +305,7 @@ function ListEvents() {
 										disabled={isDateAfterOrEqualToday(
 											e["fixture"]["date"].split("T")[0]
 										)}
-										onClick={() => openModal(e.fixture.id)}
+										onClick={() => openModal(e.fixture.id, [e["teams"]["away"]["name"], e["teams"]["home"]["name"], e["fixture"]["date"].split("T")[0]])}
 									>
 										Bet/Details
 									</button>
@@ -342,6 +344,10 @@ function ListEvents() {
 				isOpen={modalIsOpen}
 				closeModal={closeModal}
 				eventId={selectedEventId}
+				match= {matchInfo}
+			
+				
+
 			/>
 		</div>
 	);
