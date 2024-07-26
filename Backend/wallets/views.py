@@ -28,12 +28,12 @@ print("encrypted string: ", encMessage)
  
 
  
-def send_mails(email):
+def send_mails(email, message):
     
     subject = 'Bet Result | Bet App'
-    message = f'Hi , thank you for registering in geeksforgeeks.'
+    message = message
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = "jd.florezr1@uniandes.edu.co"
+    recipient_list = [email]
     send_mail( subject, message, email_from, recipient_list )
 
 
