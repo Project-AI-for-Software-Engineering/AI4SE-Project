@@ -20,7 +20,7 @@ const FootballGamesModal = ({ isOpen, closeModal, eventId, match }) => {
 			method: "GET",
 			headers: {
 				"x-rapidapi-host": "v3.football.api-sports.io",
-				"x-rapidapi-key": "0bdeba2f46704ebc6fe0ec9047150596",
+				"x-rapidapi-key": "a49f5dbb5701f6ca6a60095c718b0972",
 			},
 		});
 		const data = await response.json();
