@@ -135,11 +135,6 @@ function Bets() {
             console.error('Error recargando la billetera:', error);
           }
 		
-
-
-
-
-
 	};
 
 	useEffect(() => {
