@@ -31,3 +31,14 @@
 	font-size: 20px;
 	cursor: pointer;
 }
+
+.odds-container {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 0;
+}
+
+.odds-container p {
+	margin: 0;
+	padding: 0 10px;
+}

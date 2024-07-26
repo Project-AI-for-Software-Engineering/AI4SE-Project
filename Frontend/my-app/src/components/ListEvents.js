@@ -136,7 +136,7 @@ function ListEvents() {
 				method: "GET",
 				headers: {
 					"x-rapidapi-host": "v3.football.api-sports.io",
-					"x-rapidapi-key": "f14603dd89062225cd14d52269234f84",
+					"x-rapidapi-key": "f30be605903f29a8bf5195620ba8f839",
 				},
 			});
 			const data = await response.json();

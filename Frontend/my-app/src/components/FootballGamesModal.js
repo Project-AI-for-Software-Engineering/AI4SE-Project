@@ -81,9 +81,11 @@ const FootballGamesModal = ({ isOpen, closeModal, eventId, match }) => {
 				title="Football Games Widget"
 			></iframe>
 			{/* Displaying the odds */}
-			<p>Home Odds: {homeOdds}</p>
-			<p>Away Odds: {awayOdds}</p>
-			<p>Draw Odds: {drawOdds}</p>
+			<div className="odds-container">
+				<p>Home Odds: {homeOdds}</p>
+				<p>Away Odds: {awayOdds}</p>
+				<p>Draw Odds: {drawOdds}</p>
+			</div>
 			{/* Wallets component */}
 			<Wallets match={match} />
 		</Modal>
