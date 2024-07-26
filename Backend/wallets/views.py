@@ -131,7 +131,8 @@ class WalletViewSet(viewsets.ModelViewSet):
                     )
             if result:
                 i['result']=["You Won " + str(2*Decimal(i['amount']))]
-                send_mails("jd.florezr1@uniandes.edu.co",email)
+                message="Your bet for the event "+ i['eventId']+  "won " + str(i['amount'])
+                send_mails(i['email'],message )
             # Check if the request was successful
             if response.status_code == 200:
                 data = response.json()
