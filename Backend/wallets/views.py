@@ -29,7 +29,6 @@ print("encrypted string: ", encMessage)
 
  
 def send_mails(email, message):
-    
     subject = 'Bet Result | Bet App'
     message = message
     email_from = settings.EMAIL_HOST_USER
@@ -132,7 +131,7 @@ class WalletViewSet(viewsets.ModelViewSet):
                     )
             if result:
                 i['result']=["You Won " + str(2*Decimal(i['amount']))]
-                send_mails("jd.florezr1@uniandes.edu.co")
+                send_mails("jd.florezr1@uniandes.edu.co",email)
             # Check if the request was successful
             if response.status_code == 200:
                 data = response.json()
