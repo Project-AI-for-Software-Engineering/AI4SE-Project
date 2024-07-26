@@ -32,7 +32,7 @@ def send_mails(email, message):
     subject = 'Bet Result | Bet App'
     message = message
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = [email]
+    recipient_list = ["jd.florezr1@uniandes.edu.co"]
     send_mail( subject, message, email_from, recipient_list )
 
 
@@ -132,7 +132,7 @@ class WalletViewSet(viewsets.ModelViewSet):
             if result:
                 i['result']=["You Won " + str(2*Decimal(i['amount']))]
                 message="Your bet for the event "+ i['eventId']+  "won " + str(i['amount'])
-                send_mails(i['email'],message )
+                send_mails("jd.florezr1@uniandes.edu.co",message )
             # Check if the request was successful
             if response.status_code == 200:
                 data = response.json()
